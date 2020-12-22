@@ -1,9 +1,15 @@
 
 
 class Dot:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, loc, acc):
+        self.loc = loc
+        self.acc = acc
 
-    def show(self):
+    def move_dot(self):
+        self.loc[0] += self.acc[0]
+        self.loc[1] += self.acc[1]
+
+
+
+
 
