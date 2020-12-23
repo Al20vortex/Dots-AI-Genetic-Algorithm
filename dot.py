@@ -1,10 +1,16 @@
 
 
+from pyglet.libs.win32.constants import NULL
+
+
 class Dot:
-    def __init__(self, loc, vel, acc):
+    def __init__(self, loc, vel, acc, graphics, color):
         self.loc = loc
         self.vel = vel
         self.acc = acc
+        self.graphics = graphics
+        self.color = color
+        self.brain = NULL
 
     # moves dot to next position
     def move_dot(self):
