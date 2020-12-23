@@ -1,7 +1,4 @@
-
-
 from pyglet.libs.win32.constants import NULL
-
 
 class Dot:
     def __init__(self, loc, vel, acc, graphics, color):
@@ -12,6 +9,7 @@ class Dot:
         self.color = color
         self.brain = NULL
         self.stuck = False
+        self.fitness = 100000000000
 
     # moves dot to next position
     def move_dot(self):
