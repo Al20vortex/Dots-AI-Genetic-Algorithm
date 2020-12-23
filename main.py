@@ -45,7 +45,7 @@ mut_rate = 0.005
 # generation number and label
 gen_num = 1
 
-score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 150, y = 50)
+score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 200, y = 50)
 
 fitness_list = []
 
