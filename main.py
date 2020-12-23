@@ -28,16 +28,27 @@ goal_loc = [width/2, height - 30]
 goal = shapes.Circle(goal_loc[0], goal_loc[1], 12, color=(255,69,0), batch=batch)
 
 # of dots in the simulation, must be greater than 10
-population = 100
+population = 200
 
 # of instructions given to the dots
-brain_size = 100
+brain_size = 300
 
 # decimal representing the fraction of dots chosen for the next generation
-fraction_chosen = 0.5
+# fraction_chosen = 0.5
 
 # the dots that will be used for the next generation
 chosen_ones = []
+
+# mutation rate
+mut_rate = 0.05
+
+# generation number and label
+gen_num = 1
+
+score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 150, y = 50)
+
+fitness_list = []
+
 
 def add_dots():
     global dots
@@ -62,17 +73,77 @@ def check_collision_wall(dot):
 def succeeded(dot):
     if (sqrt((dot.loc[0] - goal_loc[0])**2 + (dot.loc[1] - goal_loc[1])**2) < 12):
         dot.stuck = True
-        dot.fitness = 0
+        dot.fitness = 999999999999
 
 # calculate the fitness of the given dot
 def calculate_fitness(dot):
-    dot.fitness = (dot.loc[0] - goal_loc[0])**2 + (dot.loc[1] - goal_loc[1])**2
+    dot.fitness = 1.000000 / ((dot.loc[0] - goal_loc[0])**2 + (dot.loc[1] - goal_loc[1])**2)
 
+# calculate the sum of every dot's fitness
+def fitness_sum(lod):
+    sum = 0.000
+    for dot in lod:
+        sum += float(dot.fitness)
+    return sum
+
+# selects the two fittest dots in a list using the fraction_chosen variable
+def select_fittest(lod):
+    sum = 0.00
+    total_fitness = fitness_sum(lod)
+    random_num = random.uniform(0, float(total_fitness))
+    global chosen_ones
+    # num_chosen = int(population * fraction_chosen)
+    chosen_ones = []
+    global dots
+    global fitness_list
+    fitness_list = []
+    for dot in dots:
+        fitness_list.append(dot.fitness / total_fitness)
+
+    for j in range (0, 2, 1):
+        # for i in range (0, population, 1):
+        #     sum += lod[i].fitness
+        #     if (sum > random_num):
+        #         chosen_ones.append(lod[i])
+        val = np.random.choice(np.arange(0, population), p = fitness_list)
+        chosen_ones.append(dots[val])
+
+
+## consumes two brains, returns a new combined brain
+def crossover(parent1, parent2):
+    crossover_point = random.randint(1, brain_size - 2)
+    new1 = np.concatenate([parent1[:crossover_point,], parent2[crossover_point:]])
+    new2 = np.concatenate([parent2[:crossover_point:,], parent1[crossover_point:]])
+    random_num = random.randint(0, 1)
+    if random_num == 0:
+        return new1
+    else:
+        return new2
+
+# produce a new population of nodes
+def make_new_gen():
+    global dots
+    for i in range(0, population, 1):
+        new_brain = crossover(chosen_ones[0].brain.dot_brain, chosen_ones[1].brain.dot_brain)
+        # for everything in the new brain, apply mutation
+        for j in range(0, brain_size):
+            mutation_x = random.randint(-5, 5)
+            mutation_y = random.randint(-5, 5)
+            if random.uniform(0, population) <= float(float(population) * mut_rate):
+                # lod[i].brain.dot_brain[j] = [mutation_x, mutation_y]
+                new_brain[j] = [mutation_x, mutation_y]
+        full_brain = Brain(brain_size)
+        full_brain.dot_brain = new_brain
+        dots[i].loc = np.array([width / 2, height / 8])
+        dots[i].stuck = False
+        dots[i].brain = full_brain
+            
 # draw the dots and goal
 @game_window.event
 def on_draw():
     game_window.clear()
     batch.draw()
+    score_label.draw()
 
 def update(dt):
     global curr_instruction
@@ -86,7 +157,16 @@ def update(dt):
             check_collision_wall(dot)
     else:
         for dot in dots:
+            # if (not dot.stuck):
             dot.stuck = True
+            calculate_fitness(dot)
+        global gen_num
+        gen_num += 1
+        select_fittest(dots)
+        make_new_gen()
+        curr_instruction = 0
+        global score_label
+        score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 150, y = 50)
 
 
 if __name__ == '__main__':    
@@ -94,5 +174,5 @@ if __name__ == '__main__':
     #     d1.acc = dot1_brain.dot_brain[x]
     #     d1.move_dot()
     add_dots()
-    pyglet.clock.schedule_interval(update, 1/60.0)
+    pyglet.clock.schedule_interval(update, 1/120.0)
     pyglet.app.run()
