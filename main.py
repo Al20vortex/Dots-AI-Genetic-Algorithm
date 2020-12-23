@@ -78,7 +78,7 @@ def succeeded(dot):
 # calculate the fitness of the given dot
 def calculate_fitness(dot):
     if dot.loc[1] <= 0:
-        dot.fitness
+        dot.fitness = 0.000
         return
     dot.fitness = 1.000000 / ((dot.loc[0] - goal_loc[0])**2 + (dot.loc[1] - goal_loc[1])**2)
 
