@@ -40,7 +40,7 @@ brain_size = 300
 chosen_ones = []
 
 # mutation rate
-mut_rate = 0.05
+mut_rate = 0.005
 
 # generation number and label
 gen_num = 1
@@ -77,6 +77,9 @@ def succeeded(dot):
 
 # calculate the fitness of the given dot
 def calculate_fitness(dot):
+    if dot.loc[1] <= 0:
+        dot.fitness
+        return
     dot.fitness = 1.000000 / ((dot.loc[0] - goal_loc[0])**2 + (dot.loc[1] - goal_loc[1])**2)
 
 # calculate the sum of every dot's fitness
@@ -167,5 +170,5 @@ if __name__ == '__main__':
     #     d1.acc = dot1_brain.dot_brain[x]
     #     d1.move_dot()
     add_dots()
-    pyglet.clock.schedule_interval(update, 1/120.0)
+    pyglet.clock.schedule_interval(update, 1/60.0)
     pyglet.app.run()
