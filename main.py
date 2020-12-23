@@ -88,9 +88,7 @@ def fitness_sum(lod):
 
 # selects the two fittest dots in a list using the fraction_chosen variable
 def select_fittest(lod):
-    sum = 0.00
     total_fitness = fitness_sum(lod)
-    random_num = random.uniform(0, float(total_fitness))
     global chosen_ones
     # num_chosen = int(population * fraction_chosen)
     chosen_ones = []
@@ -101,10 +99,6 @@ def select_fittest(lod):
         fitness_list.append(dot.fitness / total_fitness)
 
     for j in range (0, 2, 1):
-        # for i in range (0, population, 1):
-        #     sum += lod[i].fitness
-        #     if (sum > random_num):
-        #         chosen_ones.append(lod[i])
         val = np.random.choice(np.arange(0, population), p = fitness_list)
         chosen_ones.append(dots[val])
 
@@ -130,7 +124,6 @@ def make_new_gen():
             mutation_x = random.randint(-5, 5)
             mutation_y = random.randint(-5, 5)
             if random.uniform(0, population) <= float(float(population) * mut_rate):
-                # lod[i].brain.dot_brain[j] = [mutation_x, mutation_y]
                 new_brain[j] = [mutation_x, mutation_y]
         full_brain = Brain(brain_size)
         full_brain.dot_brain = new_brain
