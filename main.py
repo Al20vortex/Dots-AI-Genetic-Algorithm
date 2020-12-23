@@ -29,9 +29,11 @@ def add_dots():
         dots.append(Dot(np.array([width / 2, height / 8]), np.array([0, 0]), np.array([0, 0]), NULL, [r, g, b]))
         dots[i].brain = Brain(10000)
 
-# check if dot is colliding with wall
-def check_collision_wall():
+# check if dot is colliding with wall, if it is then set dot to stuck
+def check_collision_wall(dot):
     # todo
+    if (dot.loc[0] < 0) or (dot.loc[0] > width) or (dot.loc[1] < 0) or (dot.loc[1] > height):
+        dot.stuck = True
     return False
 
 #check if dot reached goal
@@ -57,7 +59,7 @@ def update(dt):
         dot.acc = dot.brain.dot_brain[curr_instruction]
         dot.move_dot()
         dot.graphics = shapes.Circle(dot.loc[0], dot.loc[1], 4, color = (dot.color[0], dot.color[1], dot.color[2]), batch=batch)
-    on_draw()
+        check_collision_wall(dot)
 
 
 if __name__ == '__main__':    

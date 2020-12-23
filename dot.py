@@ -11,9 +11,12 @@ class Dot:
         self.graphics = graphics
         self.color = color
         self.brain = NULL
+        self.stuck = False
 
     # moves dot to next position
     def move_dot(self):
+        if self.stuck == True:
+            return
         self.vel[0] += self.acc[0]
         self.vel[1] += self.acc[1]
         if self.vel[0] > 5:
