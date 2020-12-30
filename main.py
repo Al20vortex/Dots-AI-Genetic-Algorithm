@@ -40,7 +40,7 @@ brain_size = 300
 chosen_ones = []
 
 # mutation rate
-mut_rate = 0.005
+mut_rate = 0.0005
 
 # generation number and label
 gen_num = 1
@@ -162,7 +162,7 @@ def update(dt):
         make_new_gen()
         curr_instruction = 0
         global score_label
-        score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 150, y = 50)
+        score_label = pyglet.text.Label(text= 'Generation Number: ' + str(gen_num), color = (255, 255, 255, 255), font_size = 10, x = width - 200, y = 50)
 
 
 if __name__ == '__main__':    
